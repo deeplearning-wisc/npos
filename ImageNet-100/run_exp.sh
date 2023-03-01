@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=1,2 python3 train.py --gpus 0 1 -b 512
