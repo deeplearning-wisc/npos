@@ -1,1 +1,0 @@
-CUDA_VISIBLE_DEVICES=0 python3 eval_ood_detection.py
