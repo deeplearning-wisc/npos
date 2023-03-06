@@ -1,4 +1,4 @@
-# Non-parametric Outlier Synthesis
+# Non-parametric Outlier Synthesis (To be updated)
 
 This codebase provides a Pytorch implementation for the paper NPOS: [Non-parametric Outlier Synthesis](https://openreview.net/forum?id=JHklpEZqduQ) at ICLR 2023.
 
