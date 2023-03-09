@@ -106,7 +106,7 @@ cd CLIP_based/OOD
 
 #### Feature extraction
 
-To reduce the training burden, we only fine-tuned a limited number of layers in the pre-trained model. Therefore, we pre-extract features for training, instead of using images to repeatedly extract features with fixed parameters every iteration.
+To reduce the training time, we only fine-tuned a limited number of layers in the pre-trained model. Therefore, we pre-extract features for training, instead of using images to repeatedly extract features with fixed parameters every iteration.
 
 We provide the following script to get the features of CLIP (ViT-B/16):
 
