@@ -21,7 +21,7 @@ Remarks: This is the initial version of our codebase, and while the scripts are 
 
 ### Data Preparation
 
-This part refers to this [codebase](https://github.com/deeplearning-wisc/cider)
+This part refers to this [codebase](https://github.com/deeplearning-wisc/cider).
 
 #### In-distribution dataset
 
