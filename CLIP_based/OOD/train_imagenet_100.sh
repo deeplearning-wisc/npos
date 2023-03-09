@@ -1,0 +1,15 @@
+python train_KNN.py --ngpu 4
+  --start_epoch 30 
+  --sample_number 1000 
+  --epochs 20 
+  --sample_from 1500 
+  --select 250 
+  --loss_weight 0.1 
+  --dataset ImageNet-100 
+  --pick_nums 5 
+  --cov_mat 0.1 
+  --K 250 
+  --save /nobackup-slow/taoleitian/model/vos/ImageNet-100/MCM/test/1 
+  --batch_size 800 
+  --learning_rate 0.1 
+  --decay_rate 0.1
