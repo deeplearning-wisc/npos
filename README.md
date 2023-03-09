@@ -21,7 +21,7 @@ Remarks: This is the initial version of our codebase, and while the scripts are 
 
 ### Data Preparation
 
-This part refers to this [codebase](https://github.com/deeplearning-wisc/cider).
+This part refers to this [codebase](https://github.com/deeplearning-wisc/cider)
 
 #### In-distribution dataset
 
@@ -112,7 +112,10 @@ We provide the following script to get the features of CLIP (ViT-B/16):
 sh feature_extraction_imagenet_100.sh
 sh feature_extraction_imagenet_1k.sh
 ```
-We also provide pretrained features for [ImageNet-100](https://drive.google.com/drive/folders/1rkXQYHcaITZCj55OLNXqy_b-yjktONrn?usp=share_link). Since the feature file of ImageNet-1k is too large, we cannot provide it for the time being. Please extract it yourself based on the dataset of ImageNet-1k.
+We also provide pretrained features for [ImageNet-100](https://drive.google.com/drive/folders/1rkXQYHcaITZCj55OLNXqy_b-yjktONrn?usp=share_link). 
+
+Since the file of the ImageNet-1k pre-extracted feature is too large, we cannot provide it for the time being. Please extract it yourself based on the dataset of ImageNet-1k.
+
 #### Training
 
 We provide sample scripts to train from scratch. Feel free to modify the hyperparameters and training configurations.
@@ -137,11 +140,9 @@ sh train_npos_imagenet_100.sh
 
 Our checkpoints can be downloaded here for [ImageNet-100](https://drive.google.com/drive/folders/1SjW2kvhDQ6qcsIo5TR7eLMrcL3r6Y3QN?usp=share_link) and [ImageNet-1k](https://drive.google.com/drive/folders/1rkXQYHcaITZCj55OLNXqy_b-yjktONrn?usp=share_link). The performance of these checkpoints is consistent with the results in our paper.
 
-**Evaluate custom checkpoints** 
+### **Training from scratch**
 
-### **Train from scratch**
-
-Firstly, enter the CLIP-based method folder by running:
+Firstly, enter the training from scratch method folder by running:
 
 ```
 cd training_from_sctrach
@@ -159,7 +160,7 @@ sh train_npos_imagenet_100.sh
 
 #### Evaluation
 
-Since methods based on contrastive learning cannot obtain explicit logit output. We use KNN distance as the OOD score to evaluate the fine-tuning CLIP model.
+Since methods based on contrastive learning cannot obtain explicit logit output. We use KNN distance as the OOD score to evaluate the model trained from scratch.
 
 We provide scripts for checkpoint evaluations: 
 
