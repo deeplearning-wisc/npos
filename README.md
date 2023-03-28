@@ -134,13 +134,12 @@ We use the [MCM](https://openreview.net/forum?id=KnCS9390Va) score as the OOD sc
 We provide scripts for checkpoint evaluations:
 
 ```
-sh train_npos_cifar10.sh
-sh train_npos_cifar100.sh
-sh train_npos_imagenet_100.sh
+sh test_npos_imagenet_1k.sh
+sh test_npos_imagenet_100.sh
 ```
 
 
-Our checkpoints can be downloaded here for [ImageNet-100](https://drive.google.com/drive/folders/1SjW2kvhDQ6qcsIo5TR7eLMrcL3r6Y3QN?usp=share_link) and [ImageNet-1k](https://drive.google.com/drive/folders/1rkXQYHcaITZCj55OLNXqy_b-yjktONrn?usp=share_link). The performance of these checkpoints is consistent with the results in our paper.
+Our checkpoints can be downloaded here for [ImageNet-100](https://drive.google.com/file/d/1S-6d7DaSGPwDMcmgoPXOx06yLEi0CrR1/view?usp=share_link) and [ImageNet-1k](https://drive.google.com/file/d/1nleU7JL12NSvOLcWdOIN9XSkWFSijhXc/view?usp=share_link). The performance of these checkpoints is consistent with the results in our paper.
 
 ### **Training from scratch**
 
@@ -172,7 +171,7 @@ sh test_npos_cifar100.sh
 sh test_npos_imagenet_100.sh
 ```
 
-Our checkpoints can be downloaded here for [ImageNet-100](https://drive.google.com/drive/folders/1SjW2kvhDQ6qcsIo5TR7eLMrcL3r6Y3QN?usp=share_link), [CIFAR-10,](https://drive.google.com/drive/folders/1rkXQYHcaITZCj55OLNXqy_b-yjktONrn?usp=share_link) and [CIFAR-100](https://drive.google.com/drive/folders/1rkXQYHcaITZCj55OLNXqy_b-yjktONrn?usp=share_link). The performance of these checkpoints is consistent with the results in our paper.
+Our checkpoints can be downloaded here for [ImageNet-100](https://drive.google.com/file/d/1WBVZHjChC2dFWNoWbkb9mag5d66-ia86/view?usp=share_link), [CIFAR-10,](https://drive.google.com/file/d/1O-75ro2iwg_LFhPoyYkXrPDOmdWxIX75/view?usp=share_link) and [CIFAR-100](https://drive.google.com/file/d/1Vd5eoUHmQtlsfMxcH3evFcUiYYdyqvNU/view?usp=share_link). The performance of these checkpoints is consistent with the results in our paper.
 
 ### Citation
 
