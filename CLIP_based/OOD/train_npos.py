@@ -346,7 +346,7 @@ for epoch in range(start_epoch, args.epochs):
     # # print state with rounded decimals
     # print({k: round(v, 4) if isinstance(v, float) else v for k, v in state.items()})
 
-    print('Epoch {0:3d} | Time {1:5d} | Train Loss {2:.4f} | Outliner Loss {5:.4f} | Test Loss {3:.3f} | Test Error {4:.2f}'.format(
+    print('Epoch {0:3d} | Time {1:5d} | Train Loss {2:.4f} | Outlier Loss {5:.4f} | Test Loss {3:.3f} | Test Error {4:.2f}'.format(
         (epoch + 1),
         int(time.time() - begin_epoch),
         state['train_loss'],
