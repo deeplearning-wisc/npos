@@ -82,7 +82,6 @@ parser.add_argument('--num_layers', type=int, default=10, help='The number of la
 parser.add_argument('--sample_number', type=int, default=1000, help='number of standard Gaussian noise samples')
 parser.add_argument('--select', type=int, default=50, help='How many ID samples to pick to define as points near the boundary of the sample space')
 parser.add_argument('--sample_from', type=int, default=600, help='Number of IDs per class used to estimate OOD data.')
-parser.add_argument('--T', type=float, default=10., help='temperature value')
 parser.add_argument('--K', type=int, default=100, help='The value of top-K to calculate the KNN distance')
 parser.add_argument('--loss_weight', type=float, default=0.1, help='The weight of outlier loss')
 parser.add_argument('--decay_rate', type=float, default=0.1, help='Learning rate decay ratio for MLP outlier')
@@ -327,7 +326,7 @@ def train_epoch(args, train_loader, model, criterion_disp, criterion_comp, optim
             for index in range(args.n_cls):
                 ID = data_dict[index]
                 sample_point = generate_outliers(ID, input_index=KNN_index,
-                                                 negative_samples=negative_samples, ID_points_num=2, K=args.K, select=args.select,
+                                                 negative_samples=negative_samples, ID_points_num=args.ID_points_num, K=args.K, select=args.select,
                                                  cov_mat=args.cov_mat, sampling_ratio=1.0, pic_nums=args.pick_nums, depth=args.penultimate_dim)
                 if index == 0:
                     ood_samples = sample_point
