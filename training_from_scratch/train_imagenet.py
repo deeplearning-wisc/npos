@@ -202,7 +202,7 @@ def set_model(args):
 
     # model.load_state_dict()
     criterion = nn.CrossEntropyLoss().cuda()
-    model = nn.DataParallel(model, device_ids=list(range(args.ngpu)))
+    # model = nn.DataParallel(model, device_ids=list(range(args.ngpu)))
     # enable synchronized Batch Normalization
     if args.syncBN:
         model = apex.parallel.convert_syncbn_model(model)
@@ -228,8 +228,6 @@ def main():
 
     # training settings
     model, criterion_cls = set_model(args)
-    criterion_disp = DispLoss(args, model, train_loader, temperature=args.temp).cuda()
-    criterion_comp = CompLoss(args, temperature=args.temp).cuda()
     optimizer = torch.optim.SGD([
                 {"params": model.encoder.parameters()},
                 {"params": model.fc.parameters()},
@@ -257,6 +255,10 @@ def main():
     model.encoder = torch.nn.DataParallel(model.encoder, device_ids=list(range(args.ngpu)))
     model.fc = torch.nn.DataParallel(model.fc, device_ids=list(range(args.ngpu)))
     model.head = torch.nn.DataParallel(model.head, device_ids=list(range(args.ngpu)))
+    model.mlp = torch.nn.DataParallel(model.mlp, device_ids=list(range(args.ngpu)))
+    
+    criterion_disp = DispLoss(args, model, train_loader, temperature=args.temp).cuda()
+    criterion_comp = CompLoss(args, temperature=args.temp).cuda()
     for epoch in range(args.start_epoch, args.epochs):
         adjust_learning_rate(args, optimizer, epoch)
 
