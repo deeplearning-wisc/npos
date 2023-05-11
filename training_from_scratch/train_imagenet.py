@@ -26,7 +26,7 @@ from losses import DispLoss, CompLoss
 from util import adjust_learning_rate, warmup_learning_rate, accuracy, AverageMeter
 from tensorboard_logger import configure, log_value
 from cifar import CIFAR_GETTERS
-from models.resnet_outliers import resnet101
+from models.resnet_outliers import resnet101,SupCEHeadResNet
 from image_folder import ImageSubfolder
 from torch.distributions import MultivariateNormal
 from KNN import generate_outliers
@@ -43,7 +43,7 @@ parser.add_argument('--proto_m', default=0.95, type=float,
 parser.add_argument('--feat_dim', default=512, type=int,
                     help='feature dim')
 parser.add_argument('--in-dataset', default="CIFAR-100", type=str, help='in-distribution dataset')
-parser.add_argument('--model', default='resnet34', type=str)
+parser.add_argument('--model', default='resnet101', type=str)
 parser.add_argument('--epochs', default=500, type=int,
                     help='number of total epochs to run')
 parser.add_argument('--save_epoch', default=30, type=int,
@@ -194,11 +194,11 @@ def set_loader(args):
 
 
 def set_model(args):
-    model = resnet101(num_class=args.n_cls)
-
-    model.load_state_dict({k.replace('module.', ''): v for k, v in torch.load(
-        '/root/autodl-tmp/tlt/CIDER/CIFAR-100/07_11_20:26_SupCon_resnet34_lr_0.01_warm_False_cosine_True_bsz_512_disp_0_comp_1_512_temp_0.1_CIFAR-100_pm_0.95/checkpoint_10.pth.tar').items()},
-                          strict=True)
+    #model = resnet101(num_class=args.n_cls)
+    model = SupCEHeadResNet(name=args.model, feat_dim=args.feat_dim, num_classes=args.n_cls, pelu=args.penultimate_dim)
+    #model.load_state_dict({k.replace('module.', ''): v for k, v in torch.load(
+    #    '/root/autodl-tmp/tlt/CIDER/CIFAR-100/07_11_20:26_SupCon_resnet34_lr_0.01_warm_False_cosine_True_bsz_512_disp_0_comp_1_512_temp_0.1_CIFAR-100_pm_0.95/checkpoint_10.pth.tar').items()},
+    #                      strict=True)
 
     # model.load_state_dict()
     criterion = nn.CrossEntropyLoss().cuda()
