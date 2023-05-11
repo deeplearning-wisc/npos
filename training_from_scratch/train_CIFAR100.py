@@ -41,7 +41,7 @@ parser.add_argument('--feat_dim', default=128, type=int,
                     help='feature dim')
 parser.add_argument('--in-dataset', default="CIFAR-100", type=str, help='in-distribution dataset')
 parser.add_argument('--model', default='resnet34', type=str)
-parser.add_argument('--epochs', default=100, type=int,
+parser.add_argument('--epochs', default=500, type=int,
                     help='number of total epochs to run')
 parser.add_argument('--save-epoch', default=20, type=int,
                     help='save the model every save_epoch')
