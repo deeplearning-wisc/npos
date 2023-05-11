@@ -202,7 +202,7 @@ def set_model(args):
 
     # model.load_state_dict()
     criterion = nn.CrossEntropyLoss().cuda()
-    model = nn.DataParallel(model, device_ids=list(range(args.gpus)))
+    model = nn.DataParallel(model, device_ids=list(range(args.ngpu)))
     # enable synchronized Batch Normalization
     if args.syncBN:
         model = apex.parallel.convert_syncbn_model(model)
