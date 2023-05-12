@@ -33,17 +33,17 @@ def set_loader(args):
         normalize,
     ])
     if args.in_dataset == 'CIFAR-10':
-        train_dataset = datasets.CIFAR10(root='/nobackup-slow/taoleitian/model/',
+        train_dataset = datasets.CIFAR10(root='/nobackup/my_xfdu/cifarpy/',
                                          transform=train_transform,
                                          download=True)
-        val_dataset = datasets.CIFAR10(root='/nobackup-slow/taoleitian/model/',
+        val_dataset = datasets.CIFAR10(root='/nobackup/my_xfdu/cifarpy/',
                                        train=False,
                                        transform=val_transform)
     elif args.in_dataset == 'CIFAR-100':
-        train_dataset = datasets.CIFAR100(root='/nobackup-slow/taoleitian/model/',
+        train_dataset = datasets.CIFAR100(root='/nobackup/my_xfdu/cifarpy/',
                                           transform=train_transform,
-                                          download=True)
-        val_dataset = datasets.CIFAR100(root='/nobackup-slow/taoleitian/model/',
+                                          download=False)
+        val_dataset = datasets.CIFAR100(root='/nobackup/my_xfdu/cifarpy/',
                                         train=False,
                                         transform=val_transform)
     train_loader = torch.utils.data.DataLoader(
@@ -53,6 +53,37 @@ def set_loader(args):
         val_dataset, batch_size=args.batch_size, shuffle=False,
         num_workers=8, pin_memory=True)
     return train_loader, val_loader
+
+import torchvision.transforms as trn
+normalize = trn.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
+def set_loader_in100(args):
+    train_dataset = \
+        torchvision.datasets.ImageFolder(
+            os.path.join('/nobackup-slow/dataset/my_xfdu/IN100_new/', 'train'),
+            trn.Compose([
+                trn.Resize(256),
+                trn.CenterCrop(224),
+                trn.ToTensor(),
+                normalize,
+            ]))
+    val_dataset = \
+        torchvision.datasets.ImageFolder(
+            os.path.join('/nobackup-slow/dataset/my_xfdu/IN100_new/', 'val'),
+            trn.Compose([
+                trn.Resize(256),
+                trn.CenterCrop(224),
+                trn.ToTensor(),
+                normalize,
+            ]))
+    train_loader = torch.utils.data.DataLoader(
+        train_dataset, batch_size=args.batch_size, shuffle=False,
+        num_workers=8, pin_memory=True)
+    val_loader = torch.utils.data.DataLoader(
+        val_dataset, batch_size=args.batch_size, shuffle=False,
+        num_workers=8, pin_memory=True)
+    return train_loader, val_loader
+
 
 def set_ood_loader(args, out_dataset):
     # normalize = transforms.Normalize(mean=[x/255.0 for x in [125.3, 123.0, 113.9]],
@@ -75,7 +106,7 @@ def set_ood_loader(args, out_dataset):
         testsetout = torchvision.datasets.ImageFolder(root="/nobackup-slow/dataset/LSUN_C",
                                     transform=transforms.Compose([transforms.ToTensor(),normalize]))
     elif out_dataset == 'Places':
-        testsetout = torchvision.datasets.ImageFolder(root="/nobackup-slow/dataset/places365",
+        testsetout = torchvision.datasets.ImageFolder(root="/nobackup-slow/dataset/places365_test",
                                     transform=transforms.Compose([transforms.Resize(32), transforms.CenterCrop(32), transforms.ToTensor(),normalize]))
     elif out_dataset == 'iSUN':
         testsetout = torchvision.datasets.ImageFolder(root="/nobackup-slow/dataset/iSUN",
@@ -91,6 +122,57 @@ def set_ood_loader(args, out_dataset):
     testloaderOut = torch.utils.data.DataLoader(testsetout, batch_size=args.batch_size, shuffle=True, num_workers=8)
     return testloaderOut
 
+def set_ood_loader_in100(args, out_dataset):
+    if out_dataset == 'inat':
+        # /////////////// inat ///////////////
+        ood_data = \
+            torchvision.datasets.ImageFolder("/nobackup-slow/dataset/ImageNet_OOD_dataset/iNaturalist",
+                                             transform=trn.Compose([
+                                                 trn.Resize(256),
+                                                 trn.CenterCrop(224),
+                                                 trn.ToTensor(),
+                                                 trn.Normalize(mean=[0.485, 0.456, 0.406],
+                                                               std=[0.229, 0.224, 0.225]),
+                                             ]))
+    elif out_dataset == 'Places':
+        # /////////////// Places365 ///////////////
+        ood_data = torchvision.datasets.ImageFolder(root="/nobackup-slow/dataset/ImageNet_OOD_dataset/Places/",
+                                    transform=trn.Compose([
+                                        trn.Resize(256),
+                                        trn.CenterCrop(224),
+                                        trn.ToTensor(),
+                                        trn.Normalize(mean=[0.485, 0.456, 0.406],
+                                                      std=[0.229, 0.224, 0.225]),
+                                    ]))
+
+
+    elif out_dataset == 'Sun':
+        # /////////////// sun ///////////////
+        ood_data = torchvision.datasets.ImageFolder(root="/nobackup-slow/dataset/ImageNet_OOD_dataset/SUN/",
+                                    transform=trn.Compose([
+                                        trn.Resize(256),
+                                        trn.CenterCrop(224),
+                                        trn.ToTensor(),
+                                        trn.Normalize(mean=[0.485, 0.456, 0.406],
+                                                      std=[0.229, 0.224, 0.225]),
+                                    ]))
+
+
+    elif out_dataset == 'Textures':
+        # /////////////// texture ///////////////
+        ood_data = torchvision.datasets.ImageFolder(root="/nobackup-slow/dataset/ImageNet_OOD_dataset/Textures/",
+                                    transform=trn.Compose([
+                                        trn.Resize(256),
+                                        trn.CenterCrop(224),
+                                        trn.ToTensor(),
+                                        trn.Normalize(mean=[0.485, 0.456, 0.406],
+                                                      std=[0.229, 0.224, 0.225]),
+                                    ]))
+    testsetout = ood_data
+    if len(testsetout) > 10000:
+        testsetout = torch.utils.data.Subset(testsetout, np.random.choice(len(testsetout), 10000, replace=False))
+    testloaderOut = torch.utils.data.DataLoader(testsetout, batch_size=args.batch_size, shuffle=True, num_workers=8)
+    return testloaderOut
 def obtain_feature_from_loader(net, loader, layer_idx, embedding_dim, num_batches):
     out_features = torch.zeros((0, embedding_dim), device = 'cuda')
     with torch.no_grad():
@@ -99,7 +181,7 @@ def obtain_feature_from_loader(net, loader, layer_idx, embedding_dim, num_batche
                 if batch_idx >= num_batches:
                     break
             data, target = data.cuda(), target.cuda()
-            out_feature = net.intermediate_forward(data, layer_idx) 
+            out_feature = net.intermediate_forward(data, layer_idx)
             if layer_idx == 0: # out_feature: bz, 512, 4, 4
                 out_feature = out_feature.view(out_feature.size(0), out_feature.size(1), -1) #bz, 512, 16
                 out_feature = torch.mean(out_feature, 2) # bz, 512
