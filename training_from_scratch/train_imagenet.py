@@ -289,6 +289,7 @@ def train_epoch(args, train_loader, model, criterion_disp, criterion_comp, optim
     acc = AverageMeter()
     disp_losses = AverageMeter()
     comp_losses = AverageMeter()
+    lr_reg_losses = AverageMeter()
     data_dict = torch.zeros(args.n_cls, args.sample_number, args.penultimate_dim).cuda()
 
     model.train()
@@ -300,11 +301,14 @@ def train_epoch(args, train_loader, model, criterion_disp, criterion_comp, optim
         # input = torch.cat([input[0], input[1]], dim=0).cuda()
         # print(input.shape)
         target = target.cuda()
+        penultimate = model.encoder(input)
+        features = model.head(penultimate)
 
-        pred, penultimate, features = model(input)
+
+        # pred, penultimate, features = model(input)
         # print(features.shape)
         # features= model.head(penultimate)
-        features = F.normalize(features, dim=1)
+        # features = F.normalize(features, dim=1)
         sum_temp = 0
         for index in range(args.n_cls):
             sum_temp += number_dict[index]
@@ -368,6 +372,7 @@ def train_epoch(args, train_loader, model, criterion_disp, criterion_comp, optim
         acc_batch = accuracy(pred.data, target, topk=(1,))[0][0]
         acc.update(acc_batch, input.size(0))
         disp_losses.update(disp_loss.data, input.size(0))
+        lr_reg_losses.update(lr_reg_loss.data, input.size(0))
         comp_losses.update(comp_loss.data, input.size(0))
         loss = args.w_disp * disp_loss + args.w_comp * comp_loss
         loss = args.loss_weight * lr_reg_loss + loss
