@@ -357,6 +357,8 @@ def validate(val_loader, model, criterion, epoch, log):
     losses = AverageMeter()
     acc = AverageMeter()
 
+
+
     # switch to evaluate mode
     model.eval()
     end = time.time()

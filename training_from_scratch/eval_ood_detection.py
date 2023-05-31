@@ -66,15 +66,15 @@ def knn(layer_idx=0, num_classes=100):
     args.log_directory = f"results/{args.in_dataset}/{args.name}/knn_{args.K}"
     if not os.path.exists(args.log_directory):
         os.makedirs(args.log_directory)
-
+   
     # setup model
     train_loader, test_loader = set_loader(args)
     print(args.ckpt)
-    pretrained_dict= torch.load(args.ckpt,  map_location='cpu')['state_dict']
+    pretrained_dict= torch.load(args.ckpt,  map_location='cpu')
     print("Keys:", pretrained_dict.keys())
     pretrained_dict = {key.replace("module.", ""): value for key, value in pretrained_dict.items()}
     net = set_model(args)
-    net.load_state_dict(pretrained_dict, strict=True)
+    net.load_state_dict(pretrained_dict, strict=False)
     net.eval()
     if layer_idx == 1:
         embedding_dim = 128
@@ -112,7 +112,7 @@ def knn(layer_idx=0, num_classes=100):
         aurocs, auprs, fprs = [], [], []
         print(scores_in, scores_ood_test)
         print(scores_in[:3], scores_ood_test[:3])
-
+        torch.save(net.state_dict(), '/nobackup-fast/taoleitian/CIFAR_100.pt')
         measures = get_measures(scores_in, scores_ood_test)
         aurocs.append(measures[0]); auprs.append(measures[1]); fprs.append(measures[2])
         auroc = np.mean(aurocs); aupr = np.mean(auprs); fpr = np.mean(fprs)

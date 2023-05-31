@@ -41,7 +41,7 @@ class CompLoss(nn.Module):
         return loss
 
 class DispLoss(nn.Module):
-    def __init__(self, args, model, loader, temperature= 0.1, base_temperature=0.1):
+    def __init__(self, args, model, loader, temperature= 0.1, base_temperature=0.1, cifar=True):
         super(DispLoss, self).__init__()
         self.args = args
         self.temperature = temperature
@@ -49,7 +49,7 @@ class DispLoss(nn.Module):
         self.register_buffer("prototypes", torch.zeros(self.args.n_cls,self.args.feat_dim))
         self.model = model
         self.loader = loader
-        self.init_class_prototypes()
+        self.init_class_prototypes(if_cifar=cifar)
 
     def forward(self, features, labels):
 
@@ -81,7 +81,7 @@ class DispLoss(nn.Module):
         loss = self.temperature / self.base_temperature * mean_prob_neg.mean()
         return loss
 
-    def init_class_prototypes(self):
+    def init_class_prototypes(self, if_cifar):
         """Initialize class prototypes"""
         self.model.eval()
         start = time.time()
@@ -90,7 +90,10 @@ class DispLoss(nn.Module):
             prototypes = torch.zeros(self.args.n_cls,self.args.feat_dim).cuda()
             for i, (input, target) in enumerate(self.loader):
                 input, target = input.cuda(), target.cuda()
-                features = self.model(input)
+                if if_cifar:
+                    features = self.model(input)
+                else:
+                    _, _, features = self.model(input)
                 for j, feature in enumerate(features):
                     prototypes[target[j].item()] += feature
                     prototype_counts[target[j].item()] += 1

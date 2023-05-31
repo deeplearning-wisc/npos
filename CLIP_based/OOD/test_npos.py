@@ -86,7 +86,7 @@ if args.dataset =='ImageNet-100':
     test_data  = clip_feature(path=load_path+'/val/')
     num_classes = 100
 elif args.dataset =='ImageNet-1000':
-    test_data = clip_feature_file_dataset(path='/afs/cs.wisc.edu/u/t/a/taoleitian/private/code/KNN-OOD-Tao/OOD/10_val.txt')
+    test_data = clip_feature_file_dataset(path='./10_val.txt')
     num_classes = 1000
 else:
     test_data = dset.CIFAR100('/nobackup-slow/dataset/cifarpy', train=False, transform=test_transform)

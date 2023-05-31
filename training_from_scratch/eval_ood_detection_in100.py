@@ -12,7 +12,7 @@ import torch.backends.cudnn as cudnn
 import torchvision.transforms as trn
 import torchvision.datasets as dset
 import torch.nn.functional as F
-from models.resnet_outliers import *
+from models.resnet_im100 import *
 from skimage.filters import gaussian as gblur
 from PIL import Image as PILImage
 import seaborn as sns
@@ -27,7 +27,7 @@ def process_args():
     parser = argparse.ArgumentParser(description='Evaluates a CIFAR OOD Detector',
                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--in_dataset', default="CIFAR-100", type=str, help='in-distribution dataset')
-    parser.add_argument('-b', '--batch-size', default=64, type=int, help='mini-batch size')
+    parser.add_argument('-b', '--batch-size', default=128, type=int, help='mini-batch size')
     parser.add_argument('--name', default = "pretrained")
     parser.add_argument('--feat_dim', default=128, type=int, help='feature dim')
     parser.add_argument('--model', default='resnet34', type=str, help='model architecture')
@@ -53,7 +53,7 @@ def process_args():
     return args
 
 def set_model(args):
-    model = SupCEHeadResNet(name=args.model, feat_dim=args.feat_dim, num_classes=args.num_classes)
+    model = resnet101(num_class=args.num_classes)
     if torch.cuda.is_available():
         model = model.cuda()
         cudnn.benchmark = True
@@ -68,19 +68,19 @@ def knn(layer_idx=0, num_classes=100):
     # setup model
     train_loader, test_loader = set_loader_in100(args)
     print(args.ckpt)
-    pretrained_dict= torch.load(args.ckpt,  map_location='cpu')['state_dict']
+    pretrained_dict= torch.load(args.ckpt,  map_location='cpu')
     print("Keys:", pretrained_dict.keys())
     pretrained_dict = {key.replace("module.", ""): value for key, value in pretrained_dict.items()}
     net = set_model(args)
 
-    net.load_state_dict(pretrained_dict, strict=True)
+    net.load_state_dict(pretrained_dict, strict=False)
     net.eval()
 
     embedding_dim = 512
 
     # extract features
-    ftrain = obtain_feature_from_loader(net, train_loader, layer_idx, embedding_dim, num_batches=None)
-    ftest = obtain_feature_from_loader(net, test_loader, layer_idx, embedding_dim, num_batches=None)
+    ftrain = obtain_feature_from_loader(net, train_loader, layer_idx, embedding_dim, num_batches=None, cifar_dataset=False)
+    ftest = obtain_feature_from_loader(net, test_loader, layer_idx, embedding_dim, num_batches=None, cifar_dataset=False)
     print('ID finished')
     out_datasets = ['inat', 'Places', 'Sun', 'Textures']
 
@@ -89,7 +89,7 @@ def knn(layer_idx=0, num_classes=100):
     num_batches = ood_num_examples // args.batch_size
     for out_dataset in out_datasets:
         ood_loader = set_ood_loader_in100(args, out_dataset)
-        ood_feat = obtain_feature_from_loader(net, ood_loader, layer_idx, embedding_dim, num_batches)
+        ood_feat = obtain_feature_from_loader(net, ood_loader, layer_idx, embedding_dim, num_batches, cifar_dataset=False)
         food_all[out_dataset] = ood_feat
         print(f'OOD {out_dataset} finished')
 

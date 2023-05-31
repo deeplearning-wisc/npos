@@ -33,17 +33,17 @@ def set_loader(args):
         normalize,
     ])
     if args.in_dataset == 'CIFAR-10':
-        train_dataset = datasets.CIFAR10(root='/nobackup/my_xfdu/cifarpy/',
-                                         transform=train_transform,
-                                         download=True)
-        val_dataset = datasets.CIFAR10(root='/nobackup/my_xfdu/cifarpy/',
+        val_dataset = datasets.CIFAR10(root='/nobackup-slow/taoleitian/model',
                                        train=False,
                                        transform=val_transform)
+        train_dataset = datasets.CIFAR10(root='/nobackup-slow/taoleitian/model',
+                                         transform=train_transform,
+                                         download=True)
     elif args.in_dataset == 'CIFAR-100':
-        train_dataset = datasets.CIFAR100(root='/nobackup/my_xfdu/cifarpy/',
+        train_dataset = datasets.CIFAR100(root='/nobackup-slow/taoleitian/model',
                                           transform=train_transform,
                                           download=False)
-        val_dataset = datasets.CIFAR100(root='/nobackup/my_xfdu/cifarpy/',
+        val_dataset = datasets.CIFAR100(root='/nobackup-slow/taoleitian/model',
                                         train=False,
                                         transform=val_transform)
     train_loader = torch.utils.data.DataLoader(
@@ -91,32 +91,6 @@ def set_loader_in100(args):
     testloader = torch.utils.data.DataLoader(test_data,
                                              batch_size=args.batch_size, shuffle=True, num_workers=16, pin_memory=True)
 
-
-
-    # train_dataset = \
-    #     torchvision.datasets.ImageFolder(
-    #         os.path.join('/nobackup-slow/dataset/my_xfdu/IN100_new/', 'train'),
-    #         trn.Compose([
-    #             trn.Resize(256),
-    #             trn.CenterCrop(224),
-    #             trn.ToTensor(),
-    #             normalize,
-    #         ]))
-    # val_dataset = \
-    #     torchvision.datasets.ImageFolder(
-    #         os.path.join('/nobackup-slow/dataset/my_xfdu/IN100_new/', 'val'),
-    #         trn.Compose([
-    #             trn.Resize(256),
-    #             trn.CenterCrop(224),
-    #             trn.ToTensor(),
-    #             normalize,
-    #         ]))
-    # train_loader = torch.utils.data.DataLoader(
-    #     train_dataset, batch_size=args.batch_size, shuffle=False,
-    #     num_workers=8, pin_memory=True)
-    # val_loader = torch.utils.data.DataLoader(
-    #     val_dataset, batch_size=args.batch_size, shuffle=False,
-    #     num_workers=8, pin_memory=True)
     return labeled_trainloader, testloader
 
 
@@ -208,15 +182,20 @@ def set_ood_loader_in100(args, out_dataset):
         testsetout = torch.utils.data.Subset(testsetout, np.random.choice(len(testsetout), 10000, replace=False))
     testloaderOut = torch.utils.data.DataLoader(testsetout, batch_size=args.batch_size, shuffle=True, num_workers=8)
     return testloaderOut
-def obtain_feature_from_loader(net, loader, layer_idx, embedding_dim, num_batches):
+def obtain_feature_from_loader(net, loader, layer_idx, embedding_dim, num_batches, cifar_dataset=True):
     out_features = torch.zeros((0, embedding_dim), device = 'cuda')
     with torch.no_grad():
         for batch_idx, (data, target) in enumerate(loader):
+            if batch_idx % 10==0:
+                print(batch_idx)
             if num_batches is not None:
                 if batch_idx >= num_batches:
                     break
             data, target = data.cuda(), target.cuda()
-            out_feature = net.intermediate_forward(data, layer_idx) 
+            if cifar_dataset:
+                out_feature = net.intermediate_forward(data, layer_idx)
+            else:
+                _,_, out_feature = net(data)
             if layer_idx == 0: # out_feature: bz, 512, 4, 4
                 out_feature = out_feature.view(out_feature.size(0), out_feature.size(1), -1) #bz, 512, 16
                 out_feature = torch.mean(out_feature, 2) # bz, 512

@@ -255,6 +255,7 @@ def train(epoch, ood_list, data_dict):
         optimizer.step()
 
 
+
         # exponential moving average
         loss_avg = loss_avg * 0.8 + float(loss) * 0.2
         lr_reg_loss_avg = lr_reg_loss_avg * 0.8 + float(lr_reg_loss) * 0.2

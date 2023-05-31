@@ -157,7 +157,7 @@ res = faiss.StandardGpuResources()
 KNN_index = faiss.GpuIndexFlatL2(res, args.penultimate_dim)
 def set_loader(args):
     labeled_dataset, unlabeled_dataset, test_dataset = CIFAR_GETTERS[args.in_dataset](
-        args, '/nobackup-slow/taoleitian/model')
+        args, '/nobackup-fast/taoleitian/model')
     labeled_trainloader = torch.utils.data.DataLoader(labeled_dataset, \
                                                       batch_size=args.batch_size, shuffle=True, num_workers=4,
                                                       pin_memory=True, drop_last=True)
@@ -354,6 +354,7 @@ def validate(val_loader, model, criterion, epoch, log):
     batch_time = AverageMeter()
     losses = AverageMeter()
     acc = AverageMeter()
+    torch.save(model.state_dict(), '/nobackup-fast/taoleitian/test/CIFAR100.pt')
 
     # switch to evaluate mode
     model.eval()
