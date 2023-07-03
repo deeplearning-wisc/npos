@@ -118,6 +118,8 @@ We also provide pretrained features for [ImageNet-100](https://drive.google.com/
 
 Since the file of the ImageNet-1k pre-extracted feature is too large, we cannot provide it for the time being. Please extract it yourself based on the dataset of ImageNet-1k.
 
+We provide the file formulation for [ImageNet-1k](https://drive.google.com/file/d/10QoDFyOuJAgYlzO7PzW0_sFmKOMIYE2U/view?usp=drive_link) for reference. 
+
 #### Training
 
 We provide sample scripts to train from scratch. Feel free to modify the hyperparameters and training configurations.
