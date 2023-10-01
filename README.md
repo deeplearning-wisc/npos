@@ -8,6 +8,14 @@ Out-of-distribution (OOD) detection is indispensable for safely deploying machin
 
 ![image-20230309215528811](npos.png)
 
+## Ads
+Checkout our
+* ICLR'22 work [VOS](https://github.com/deeplearning-wisc/vos) on object detection in still images and classification networks.
+* NeurIPS'22 work [SIREN](https://github.com/deeplearning-wisc/siren) on OOD detection for detection transformers.
+* CVPR'22 work [STUD](https://github.com/deeplearning-wisc/stud) on object detection in video datasets.
+* NeurIPS'23 work [DREAM-OOD](https://arxiv.org/pdf/2309.13415.pdf) on outlier generation in the pixel space (by diffusion models) if you are interested!
+
+
 # Setup
 
 ## Required Packages
